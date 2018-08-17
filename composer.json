@@ -1,8 +1,40 @@
 {
+    "name": "scalify/puppet-master-client",
+    "description": "Client library for the puppet-master HTTP API",
+    "version": "1.0.0",
+    "homepage": "https://docs.puppet-master.io",
+    "authors": [
+        {
+            "name": "Alexander Pinnecke",
+            "email": "alex@scalify.me",
+            "homepage": "https://scalify.me",
+            "role": "developer"
+        }
+    ],
+    "support": {
+        "email": "alex@scalify.me",
+        "docs": "https://docs.puppet-master.io"
+    },
+    "keywords": [
+        "puppet-master",
+        "puppet-master.io",
+        "puppet-master client",
+        "scalify"
+    ],
+    "license": "Apache-2.0",
+    "type": "library",
     "require": {
+        "ext-curl": "*",
+        "ext-json": "*",
         "guzzlehttp/guzzle": "~6.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^6.5"
+    },
+    "autoload": {
+        "psr-4": {"Scalify\\": "src/Scalify"}
+    },
+    "autoload-dev": {
+        "psr-4": {"Test\\Scalify\\": "test/Scalify"}
     }
 }
