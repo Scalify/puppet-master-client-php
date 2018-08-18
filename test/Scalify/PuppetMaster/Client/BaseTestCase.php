@@ -2,24 +2,26 @@
 
 namespace Test\Scalify\PuppetMaster\Client;
 
+use DateTime;
 use PHPUnit\Framework\TestCase;
-use Scalify\PuppetMaster\Client\CreateJob;
 
 class BaseTestCase extends TestCase
 {
-    /**
-     * @return CreateJob
-     */
-    protected function newTestCreateJob(): CreateJob
+    protected function getJSONContent(string $file)
     {
-        $data = $this->getCreateJobRequestContent();
-        $job = new CreateJob($data["code"], $data["vars"], $data["modules"]);
-
-        return $job;
+        return json_decode(file_get_contents(sprintf("%s/test-data/%s.json", getcwd(), $file)), true);
     }
 
-    protected function getCreateJobRequestContent()
+    protected function assertDateEquals(string $date1, string $date2, string $message)
     {
-        return json_decode(file_get_contents(getcwd() . "/test-data/create-request.json"), true);
+        if (!empty($date1)) {
+            $date1 = DateTime::createFromFormat(DateTime::RFC3339, $date1)->format(DateTime::RFC3339);
+        }
+
+        if (!empty($date2)) {
+            $date2 = DateTime::createFromFormat(DateTime::RFC3339, $date2)->format(DateTime::RFC3339);
+        }
+
+        $this->assertEquals($date1, $date2, $message);
     }
 }

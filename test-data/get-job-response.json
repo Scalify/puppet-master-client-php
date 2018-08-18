@@ -1,6 +1,6 @@
 {
   "data": {
-    "uuid": "77d6b615-f5fd-4bd8-ab61-58bdc207cf2e",
+    "uuid": "a47e71b6-1bb4-44e0-a808-e340e7d441e9",
     "code": "import {getIp} from 'shared';\n\nawait page.goto(vars.page);\nconst ip = await getIp(page);\n\nlogger.info(ip);\nresults.ip = ip;",
     "status": "done",
     "vars": {
@@ -12,37 +12,37 @@
     "error": "",
     "logs": [
       {
-        "time": "2018-08-17T15:25:21.042Z",
+        "time": "2018-08-18T09:05:42Z",
         "level": "DEBUG",
         "message": "Setting page viewport to width 1920 / height 1080"
       },
       {
-        "time": "2018-08-17T15:25:21.048Z",
+        "time": "2018-08-18T09:05:42Z",
         "level": "DEBUG",
         "message": "Setting default language to en"
       },
       {
-        "time": "2018-08-17T15:25:21.051Z",
+        "time": "2018-08-18T09:05:42Z",
         "level": "DEBUG",
         "message": "Linking module shared to file:///puppet-master/code (Available: shared)"
       },
       {
-        "time": "2018-08-17T15:25:21.469Z",
+        "time": "2018-08-18T09:05:43Z",
         "level": "INFO",
         "message": " 127.0.0.1"
       },
       {
-        "time": "2018-08-17T15:25:21.469Z",
+        "time": "2018-08-18T09:05:43Z",
         "level": "INFO",
-        "message": "Code took 418ms to execute."
+        "message": "Code took 438ms to execute."
       }
     ],
     "results": {
       "ip": " 127.0.0.1"
     },
-    "created_at": "2018-08-17T15:25:20.026612842Z",
-    "started_at": "2018-08-17T15:25:21.051Z",
-    "finished_at": "2018-08-17T15:25:21.469Z",
-    "duration": 418
+    "created_at": "2018-08-18T09:05:41Z",
+    "started_at": "2018-08-18T09:05:42Z",
+    "finished_at": "2018-08-18T09:05:43Z",
+    "duration": 438
   }
 }

@@ -2,8 +2,24 @@
 
 namespace Test\Scalify\PuppetMaster\Client;
 
+use Scalify\PuppetMaster\Client\CreateJob;
+
 class CreateJobTest extends BaseTestCase
 {
+    /**
+     * @return CreateJob
+     */
+    private function newTestCreateJob(): CreateJob
+    {
+        $data = $this->getCreateJobRequestContent();
+
+        return new CreateJob($data["code"], $data["vars"], $data["modules"]);
+    }
+    private function getCreateJobRequestContent()
+    {
+        return $this->getJSONContent("create-request");
+    }
+
     public function testConstructSetsFields()
     {
         $job = $this->newTestCreateJob();

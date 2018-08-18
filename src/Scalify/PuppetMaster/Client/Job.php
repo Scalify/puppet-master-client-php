@@ -73,9 +73,48 @@ class Job implements JsonSerializable
         $this->logs = $data["logs"] ?: [];
         $this->results = $data["results"] ?: [];
         $this->duration = $data["duration"] ?: 0;
-        $this->createdAt = $data["created_at"] ?: null;
-        $this->startedAt = $data["started_at"] ?: null;
-        $this->finishedAt = $data["finished_at"] ?: null;
+        $this->createdAt = $this->parseDate($data["created_at"]);
+        $this->startedAt = $this->parseDate($data["started_at"]);
+        $this->finishedAt = $this->parseDate($data["finished_at"]);
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        return [
+            "uuid" => $this->uuid,
+            "status" => $this->status,
+            "code" => $this->code,
+            "modules" => $this->modules,
+            "vars" => $this->vars,
+            "error" => $this->error,
+            "logs" => $this->logs,
+            "results" => $this->results,
+            "duration" => $this->duration,
+            "created_at" => $this->formatDate($this->createdAt),
+            "started_at" => $this->formatDate($this->startedAt),
+            "finished_at" => $this->formatDate($this->finishedAt),
+        ];
+    }
+
+    private function formatDate(DateTime $dateTime) : string
+    {
+        if ($dateTime === null) {
+            return null;
+        }
+
+        return $dateTime->format(DateTime::RFC3339);
+    }
+
+    private function parseDate(string $dateTime) : DateTime
+    {
+        if (empty($dateTime)) {
+            return null;
+        }
+
+        return DateTime::createFromFormat(DateTime::RFC3339, $dateTime);
     }
 
     /**
