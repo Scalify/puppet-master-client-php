@@ -1,0 +1,20 @@
+{
+  "data": {
+    "uuid": "77d6b615-f5fd-4bd8-ab61-58bdc207cf2e",
+    "code": "import {getIp} from 'shared';\n\nawait page.goto(vars.page);\nconst ip = await getIp(page);\n\nlogger.info(ip);\nresults.ip = ip;",
+    "status": "created",
+    "vars": {
+      "page": "http://ifcfg.co"
+    },
+    "modules": {
+      "shared": "export async function getIp(page) {\n  const text = await page.evaluate(() => document.querySelector('body').textContent);\n  return text.split(\":\")[1];\n}"
+    },
+    "error": "",
+    "logs": null,
+    "results": null,
+    "created_at": "2018-08-17T15:25:20.026612842Z",
+    "started_at": null,
+    "finished_at": null,
+    "duration": 0
+  }
+}

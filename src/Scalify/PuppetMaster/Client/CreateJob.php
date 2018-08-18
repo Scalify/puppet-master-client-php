@@ -104,6 +104,16 @@ class CreateJob implements JsonSerializable
     }
 
     /**
+     * @param string $key
+     *
+     * @return bool
+     */
+    public function hasVar(string $key): bool
+    {
+        return array_key_exists($key, $this->vars);
+    }
+
+    /**
      * @param array $vars
      */
     public function setVars(array $vars)

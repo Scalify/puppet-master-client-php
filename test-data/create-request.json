@@ -1,0 +1,9 @@
+{
+  "code": "import {getIp} from 'shared';\n\nawait page.goto(vars.page);\nconst ip = await getIp(page);\n\nlogger.info(ip);\nresults.ip = ip;",
+  "vars": {
+    "page": "http://ifcfg.co"
+  },
+  "modules": {
+    "shared": "export async function getIp(page) {\n  const text = await page.evaluate(() => document.querySelector('body').textContent);\n  return text.split(\":\")[1];\n}"
+  }
+}
