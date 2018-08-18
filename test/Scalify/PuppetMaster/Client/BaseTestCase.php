@@ -9,7 +9,12 @@ class BaseTestCase extends TestCase
 {
     protected function getJSONContent(string $file)
     {
-        return json_decode(file_get_contents(sprintf("%s/test-data/%s.json", getcwd(), $file)), true);
+        return json_decode($this->getFileContent($file), true);
+    }
+
+    protected function getFileContent(string $file)
+    {
+        return file_get_contents(sprintf("%s/test-data/%s.json", getcwd(), $file));
     }
 
     protected function assertDateEquals(string $date1, string $date2, string $message)
@@ -24,4 +29,5 @@ class BaseTestCase extends TestCase
 
         $this->assertEquals($date1, $date2, $message);
     }
+
 }

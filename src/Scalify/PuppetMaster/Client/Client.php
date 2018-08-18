@@ -72,7 +72,7 @@ class Client implements ClientInterface
      */
     public function getJobsByStatus(string $status, int $page, int $perPage): array
     {
-        $request = new Request("GET", $this->buildUrl(sprintf("/jobs?status=%s", $status)));
+        $request = new Request("GET", $this->buildUrl(sprintf("/jobs?status=%s&page=%d&per_page=%d", $status, $page, $perPage)));
         $response = $this->send($request);
 
         if ($response->getStatusCode() !== 200) {

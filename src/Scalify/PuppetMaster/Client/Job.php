@@ -99,7 +99,7 @@ class Job implements JsonSerializable
         ];
     }
 
-    private function formatDate(DateTime $dateTime) : string
+    private function formatDate(DateTime $dateTime): string
     {
         if ($dateTime === null) {
             return null;
@@ -108,7 +108,12 @@ class Job implements JsonSerializable
         return $dateTime->format(DateTime::RFC3339);
     }
 
-    private function parseDate(string $dateTime) : DateTime
+    /**
+     * @param string|null $dateTime
+     *
+     * @return DateTime|null
+     */
+    private function parseDate($dateTime)
     {
         if (empty($dateTime)) {
             return null;
