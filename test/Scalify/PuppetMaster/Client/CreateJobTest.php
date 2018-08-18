@@ -6,78 +6,70 @@ use Scalify\PuppetMaster\Client\CreateJob;
 
 class CreateJobTest extends BaseTestCase
 {
-    /**
-     * @return CreateJob
-     */
-    private function newTestCreateJob(): CreateJob
-    {
-        $data = $this->getCreateJobRequestContent();
+    /** @var CreateJob */
+    private $job;
 
-        return new CreateJob($data["code"], $data["vars"], $data["modules"]);
-    }
-    private function getCreateJobRequestContent()
+    /** @var array */
+    private $request;
+
+    /**
+     * @inheritDoc
+     */
+    protected function setUp()
     {
-        return $this->getJSONContent("create-request");
+        $this->request = $this->getJSONContent("create-request");
+        $this->job = new CreateJob($this->request["code"], $this->request["vars"], $this->request["modules"]);
     }
 
     public function testConstructSetsFields()
     {
-        $job = $this->newTestCreateJob();
-
-        $this->assertNotEmpty($job->getCode());
-        $this->assertArrayHasKey("shared", $job->getModules());
-        $this->assertArrayHasKey("page", $job->getVars());
+        $this->assertNotEmpty($this->job->getCode());
+        $this->assertArrayHasKey("shared", $this->job->getModules());
+        $this->assertArrayHasKey("page", $this->job->getVars());
     }
 
     public function testAddRemoveModule()
     {
-        $job = $this->newTestCreateJob();
+        $this->assertCount(1, $this->job->getModules());
+        $this->assertArrayNotHasKey("test", $this->job->getModules());
+        $this->assertFalse($this->job->hasModule("test"));
 
-        $this->assertCount(1, $job->getModules());
-        $this->assertArrayNotHasKey("test", $job->getModules());
-        $this->assertFalse($job->hasModule("test"));
+        $this->job->addModule("test", "export const content = \"teschd\"");
 
-        $job->addModule("test", "export const content = \"teschd\"");
+        $this->assertCount(2, $this->job->getModules());
+        $this->assertArrayHasKey("test", $this->job->getModules());
+        $this->assertTrue($this->job->hasModule("test"));
 
-        $this->assertCount(2, $job->getModules());
-        $this->assertArrayHasKey("test", $job->getModules());
-        $this->assertTrue($job->hasModule("test"));
+        $this->job->removeModule("test");
 
-        $job->removeModule("test");
-
-        $this->assertCount(1, $job->getModules());
-        $this->assertArrayNotHasKey("test", $job->getModules());
+        $this->assertCount(1, $this->job->getModules());
+        $this->assertArrayNotHasKey("test", $this->job->getModules());
     }
 
     public function testAddRemoveVar()
     {
-        $job = $this->newTestCreateJob();
+        $this->assertCount(1, $this->job->getVars());
+        $this->assertArrayNotHasKey("test", $this->job->getVars());
+        $this->assertFalse($this->job->hasVar("test"));
 
-        $this->assertCount(1, $job->getVars());
-        $this->assertArrayNotHasKey("test", $job->getVars());
-        $this->assertFalse($job->hasVar("test"));
+        $this->job->addVar("test", "export const content = \"teschd\"");
 
-        $job->addVar("test", "export const content = \"teschd\"");
+        $this->assertCount(2, $this->job->getVars());
+        $this->assertArrayHasKey("test", $this->job->getVars());
+        $this->assertTrue($this->job->hasVar("test"));
 
-        $this->assertCount(2, $job->getVars());
-        $this->assertArrayHasKey("test", $job->getVars());
-        $this->assertTrue($job->hasVar("test"));
+        $this->job->removeVar("test");
 
-        $job->removeVar("test");
-
-        $this->assertCount(1, $job->getVars());
-        $this->assertArrayNotHasKey("test", $job->getVars());
+        $this->assertCount(1, $this->job->getVars());
+        $this->assertArrayNotHasKey("test", $this->job->getVars());
     }
 
     public function testToArray()
     {
-        $job = $this->newTestCreateJob();
-        $request = $this->getCreateJobRequestContent();
+        $data = $this->job->toArray();
 
-        $data = $job->toArray();
-
-        $this->assertEquals($data["code"], $request["code"]);
-        $this->assertEquals($data["vars"], $request["vars"]);
-        $this->assertEquals($data["modules"], $request["modules"]);
+        $this->assertEquals($data["code"], $this->request["code"]);
+        $this->assertEquals($data["vars"], $this->request["vars"]);
+        $this->assertEquals($data["modules"], $this->request["modules"]);
     }
 }
