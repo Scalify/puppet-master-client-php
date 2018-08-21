@@ -53,4 +53,21 @@ interface ClientInterface
      * @return void
      */
     public function deleteJob(string $uuid);
+
+    /**
+     * Executes a job synchronously, which means that the job is created and then checked every $syncSleepMs
+     *
+     *
+     * @param CreateJob $createJob
+     *
+     * @return Job
+     */
+    public function executeSynchronously(CreateJob $createJob): Job;
+
+    /**
+     * Sets the amount of time to wait between fetching an updated job from the puppet-master api.
+     *
+     * @param int $syncSleepMs
+     */
+    public function setSyncSleepMs(int $syncSleepMs);
 }

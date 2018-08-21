@@ -2,6 +2,7 @@
 
 namespace Scalify\PuppetMaster\Client;
 
+use Exception;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
@@ -25,12 +26,28 @@ class ClientException extends RuntimeException
      * @param string                 $message
      * @param RequestInterface       $request
      * @param ResponseInterface|null $response
+     * @param Exception|null         $previous
      */
-    public function __construct(string $message, RequestInterface $request, ResponseInterface $response = null)
+    public function __construct(string $message, RequestInterface $request, ResponseInterface $response = null, Exception $previous = null)
     {
-        parent::__construct($message, $response !== null ? $response->getStatusCode() : 0);
+        $code = 0;
+        if ($response !== null) {
+            $code = $response->getStatusCode();
+        } else if ($previous !== null) {
+            $code = $previous->getCode();
+        }
+
+        parent::__construct($message, $code, $previous);
         $this->request = $request;
         $this->response = $response;
+    }
+
+    /**
+     * @param int $code
+     */
+    public function setCode(int $code)
+    {
+        $this->code = $code;
     }
 
     /**

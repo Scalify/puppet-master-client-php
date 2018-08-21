@@ -20,6 +20,13 @@ class Client implements ClientInterface
     private $client;
 
     /**
+     * The amount of time to wait between fetching an updated job from the puppet-master api.
+     *
+     * @var int
+     */
+    private $syncSleepMs = 500;
+
+    /**
      * Client constructor.
      *
      * @param GuzzleClient $client
@@ -31,6 +38,14 @@ class Client implements ClientInterface
         $this->endpoint = trim($endpoint, "/");
         $this->apiToken = trim($apiToken);
         $this->client = $client;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setSyncSleepMs(int $syncSleepMs)
+    {
+        $this->syncSleepMs = $syncSleepMs;
     }
 
     /**
@@ -92,10 +107,10 @@ class Client implements ClientInterface
             $response = $this->client->send($request);
         } catch (GuzzleException $e) {
             if ($e->getCode() === 401) {
-                throw new ClientException("Authorization failed. Did you specify the right api token?", $request);
+                throw new ClientException("Authorization failed. Did you specify the right api token?", $request, null, $e);
             }
 
-            throw new ClientException(sprintf("Failed to execute request (code %d): %s", $e->getCode(), $e->getMessage()), $request);
+            throw new ClientException(sprintf("Failed to execute request (code %d): %s", $e->getCode(), $e->getMessage()), $request, null, $e);
         }
 
         return $response;
@@ -138,6 +153,23 @@ class Client implements ClientInterface
         $data = $this->getJsonBody($request, $response);
 
         return new Job($data);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function executeSynchronously(CreateJob $createJob): JOb
+    {
+        $job = $this->createJob($createJob);
+
+        do {
+            $job = $this->getJob($job->getUUID());
+            if ($job->getStatus() !== Job::STATUS_DONE) {
+                usleep($this->syncSleepMs * 1000);
+            }
+        } while ($job->getStatus() !== Job::STATUS_DONE);
+
+        return $job;
     }
 
     /**

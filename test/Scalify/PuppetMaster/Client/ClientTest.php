@@ -9,6 +9,7 @@ use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\RequestInterface;
 use Scalify\PuppetMaster\Client\Client;
+use Scalify\PuppetMaster\Client\ClientInterface;
 use Scalify\PuppetMaster\Client\CreateJob;
 use Scalify\PuppetMaster\Client\Job;
 
@@ -17,7 +18,7 @@ class ClientTest extends BaseTestCase
     /** @var array[] */
     private $requests = [];
 
-    /** @var Client */
+    /** @var ClientInterface */
     private $client;
 
     public function testAuthorizationHeader()
@@ -151,7 +152,6 @@ class ClientTest extends BaseTestCase
             new Response(200, [], $this->getFileContent("create-response")),
         ]);
 
-        $request = $this->getFileContent("create-request");
         $requestData = $this->getJSONContent("create-request");
         $createJob = new CreateJob($requestData["code"], $requestData["vars"], $requestData["modules"]);
         $job = $this->client->createJob($createJob);
@@ -178,5 +178,25 @@ class ClientTest extends BaseTestCase
         $req = $this->getSentRequest();
         $this->assertEquals("DELETE", $req->getMethod());
         $this->assertEquals("/jobs/a47e71b6-1bb4-44e0-a808-e340e7d441e9", $req->getUri()->getPath());
+    }
+
+    public function testExecuteSynchronously()
+    {
+        $this->createMockedClient([
+            new Response(200, [], $this->getFileContent("create-response")),
+            new Response(200, [], $this->getFileContent("create-response")),
+            new Response(200, [], $this->getFileContent("create-response")),
+            new Response(200, [], $this->getFileContent("get-job-response")),
+        ]);
+
+        $this->client->setSyncSleepMs(10);
+
+        $requestData = $this->getJSONContent("create-request");
+        $createJob = new CreateJob($requestData["code"], $requestData["vars"], $requestData["modules"]);
+        $job = $this->client->executeSynchronously($createJob);
+
+        $this->assertEquals("a47e71b6-1bb4-44e0-a808-e340e7d441e9", $job->getUUID());
+        $this->assertEquals(Job::STATUS_DONE, $job->getStatus());
+        $this->assertCount(4, $this->requests);
     }
 }
