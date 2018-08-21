@@ -204,7 +204,7 @@ class Job
     /**
      * @return DateTime
      */
-    public function getStartedAt(): DateTime
+    public function getStartedAt()
     {
         return $this->startedAt;
     }
@@ -212,7 +212,7 @@ class Job
     /**
      * @return DateTime
      */
-    public function getFinishedAt(): DateTime
+    public function getFinishedAt()
     {
         return $this->finishedAt;
     }
