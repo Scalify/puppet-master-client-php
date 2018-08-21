@@ -3,9 +3,8 @@
 namespace Scalify\PuppetMaster\Client;
 
 use DateTime;
-use JsonSerializable;
 
-class Job implements JsonSerializable
+class Job
 {
     const STATUS_CREATED = "created";
     const STATUS_QUEUED = "queued";
@@ -79,6 +78,20 @@ class Job implements JsonSerializable
     }
 
     /**
+     * @param string|null $dateTime
+     *
+     * @return DateTime|null
+     */
+    private function parseDate($dateTime)
+    {
+        if (empty($dateTime)) {
+            return null;
+        }
+
+        return DateTime::createFromFormat(DateTime::RFC3339, $dateTime);
+    }
+
+    /**
      * @return array
      */
     public function toArray()
@@ -106,28 +119,6 @@ class Job implements JsonSerializable
         }
 
         return $dateTime->format(DateTime::RFC3339);
-    }
-
-    /**
-     * @param string|null $dateTime
-     *
-     * @return DateTime|null
-     */
-    private function parseDate($dateTime)
-    {
-        if (empty($dateTime)) {
-            return null;
-        }
-
-        return DateTime::createFromFormat(DateTime::RFC3339, $dateTime);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function jsonSerialize(): array
-    {
-        return $this->toArray();
     }
 
     /**

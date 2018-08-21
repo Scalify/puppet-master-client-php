@@ -20,9 +20,18 @@ class ClientTest extends BaseTestCase
     /** @var Client */
     private $client;
 
-    protected function getSentRequest(): RequestInterface
+    public function testAuthorizationHeader()
     {
-        return $this->requests[0]["request"];
+        $this->createMockedClient([
+            new Response(200, [], $this->getFileContent("get-job-response")),
+        ]);
+
+        $this->client->getJob("a47e71b6-1bb4-44e0-a808-e340e7d441e9");
+
+        $this->assertCount(1, $this->requests);
+        $req = $this->getSentRequest();
+        $this->assertTrue($req->hasHeader("Authorization"));
+        $this->assertEquals("Bearer test", $req->getHeaderLine("Authorization"));
     }
 
     /**
@@ -38,18 +47,9 @@ class ClientTest extends BaseTestCase
         $this->client = new Client($client, "http://localhost", "test");
     }
 
-    public function testAuthorizationHeader()
+    protected function getSentRequest(): RequestInterface
     {
-        $this->createMockedClient([
-            new Response(200, [], $this->getFileContent("get-job-response")),
-        ]);
-
-        $this->client->getJob("a47e71b6-1bb4-44e0-a808-e340e7d441e9");
-
-        $this->assertCount(1, $this->requests);
-        $req = $this->getSentRequest();
-        $this->assertTrue($req->hasHeader("Authorization"));
-        $this->assertEquals("Bearer test", $req->getHeaderLine("Authorization"));
+        return $this->requests[0]["request"];
     }
 
     public function testContentTypeHeader()

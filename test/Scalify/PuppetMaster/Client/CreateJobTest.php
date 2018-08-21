@@ -12,15 +12,6 @@ class CreateJobTest extends BaseTestCase
     /** @var array */
     private $request;
 
-    /**
-     * @inheritDoc
-     */
-    protected function setUp()
-    {
-        $this->request = $this->getJSONContent("create-request");
-        $this->job = new CreateJob($this->request["code"], $this->request["vars"], $this->request["modules"]);
-    }
-
     public function testConstructSetsFields()
     {
         $this->assertNotEmpty($this->job->getCode());
@@ -68,8 +59,27 @@ class CreateJobTest extends BaseTestCase
     {
         $data = $this->job->toArray();
 
-        $this->assertEquals($data["code"], $this->request["code"]);
-        $this->assertEquals($data["vars"], $this->request["vars"]);
-        $this->assertEquals($data["modules"], $this->request["modules"]);
+        $this->assertEquals($this->request["code"], $data["code"]);
+        $this->assertEquals($this->request["vars"], $data["vars"]);
+        $this->assertEquals($this->request["modules"], $data["modules"]);
+    }
+
+    public function testExplicitUUID()
+    {
+        $uuid = "test-myown-uuid-example";
+        $this->job = new CreateJob($this->request["code"], $this->request["vars"], $this->request["modules"], $uuid);
+        $this->assertEquals($uuid, $this->job->getUUID());
+
+        $data = $this->job->toArray();
+        $this->assertEquals($uuid, $data["uuid"]);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function setUp()
+    {
+        $this->request = $this->getJSONContent("create-request");
+        $this->job = new CreateJob($this->request["code"], $this->request["vars"], $this->request["modules"]);
     }
 }

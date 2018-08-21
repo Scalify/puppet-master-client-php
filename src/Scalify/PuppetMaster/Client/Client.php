@@ -34,32 +34,6 @@ class Client implements ClientInterface
     }
 
     /**
-     * Execute a request, adding required JSON headers and authorization.
-     *
-     * @param RequestInterface $request
-     *
-     * @return ResponseInterface
-     */
-    protected function send(RequestInterface $request): ResponseInterface
-    {
-        $request = $request->withHeader("Authorization", sprintf("Bearer %s", $this->apiToken));
-        $request = $request->withHeader("Content-Type", "application/json");
-        $request = $request->withHeader("Accept", "application/json");
-
-        try {
-            $response = $this->client->send($request);
-        } catch (GuzzleException $e) {
-            if ($e->getCode() === 401) {
-                throw new ClientException("Authorization failed. Did you specify the right api token?", $request);
-            }
-
-            throw new ClientException(sprintf("Failed to execute request (code %d): %s", $e->getCode(), $e->getMessage()), $request);
-        }
-
-        return $response;
-    }
-
-    /**
      * @inheritDoc
      */
     public function getJobs(int $page, int $perPage): array
@@ -90,53 +64,6 @@ class Client implements ClientInterface
     }
 
     /**
-     * @inheritDoc
-     */
-    public function createJob(CreateJob $createJob): Job
-    {
-        $request = new Request("POST", $this->buildUrl("/jobs"), [], json_encode($createJob->toArray()));
-        $response = $this->send($request);
-
-        if ($response->getStatusCode() !== 200) {
-            throw new ClientException(sprintf("Unexpected response: %d %s", $response->getStatusCode(), $response->getReasonPhrase()), $request, $response);
-        }
-
-        $data = $this->getJsonBody($request, $response);
-
-        return new Job($data);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getJob(string $uuid): Job
-    {
-        $request = new Request("GET", $this->buildUrl(sprintf("/jobs/%s",$uuid)));
-        $response = $this->send($request);
-
-        if ($response->getStatusCode() !== 200) {
-            throw new ClientException(sprintf("Unexpected response: %d %s", $response->getStatusCode(), $response->getReasonPhrase()), $request, $response);
-        }
-
-        $data = $this->getJsonBody($request, $response);
-
-        return new Job($data);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function deleteJob(string $uuid)
-    {
-        $request = new Request("DELETE", $this->buildUrl(sprintf("/jobs/%s", $uuid)));
-        $response = $this->send($request);
-
-        if ($response->getStatusCode() !== 204) {
-            throw new ClientException(sprintf("Unexpected response: %d %s", $response->getStatusCode(), $response->getReasonPhrase()), $request, $response);
-        }
-    }
-
-    /**
      * Builds the request URL out of the baseUrl and given path.
      *
      * @param string $path
@@ -146,6 +73,32 @@ class Client implements ClientInterface
     private function buildUrl(string $path)
     {
         return sprintf("%s/%s", $this->endpoint, trim($path, "/"));
+    }
+
+    /**
+     * Execute a request, adding required JSON headers and authorization.
+     *
+     * @param RequestInterface $request
+     *
+     * @return ResponseInterface
+     */
+    protected function send(RequestInterface $request): ResponseInterface
+    {
+        $request = $request->withHeader("Authorization", sprintf("Bearer %s", $this->apiToken));
+        $request = $request->withHeader("Content-Type", "application/json");
+        $request = $request->withHeader("Accept", "application/json");
+
+        try {
+            $response = $this->client->send($request);
+        } catch (GuzzleException $e) {
+            if ($e->getCode() === 401) {
+                throw new ClientException("Authorization failed. Did you specify the right api token?", $request);
+            }
+
+            throw new ClientException(sprintf("Failed to execute request (code %d): %s", $e->getCode(), $e->getMessage()), $request);
+        }
+
+        return $response;
     }
 
     /**
@@ -168,6 +121,53 @@ class Client implements ClientInterface
         }
 
         return $data["data"];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function createJob(CreateJob $createJob): Job
+    {
+        $request = new Request("POST", $this->buildUrl("/jobs"), [], json_encode($createJob->toArray()));
+        $response = $this->send($request);
+
+        if ($response->getStatusCode() !== 200) {
+            throw new ClientException(sprintf("Unexpected response: %d %s", $response->getStatusCode(), $response->getReasonPhrase()), $request, $response);
+        }
+
+        $data = $this->getJsonBody($request, $response);
+
+        return new Job($data);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getJob(string $uuid): Job
+    {
+        $request = new Request("GET", $this->buildUrl(sprintf("/jobs/%s", $uuid)));
+        $response = $this->send($request);
+
+        if ($response->getStatusCode() !== 200) {
+            throw new ClientException(sprintf("Unexpected response: %d %s", $response->getStatusCode(), $response->getReasonPhrase()), $request, $response);
+        }
+
+        $data = $this->getJsonBody($request, $response);
+
+        return new Job($data);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function deleteJob(string $uuid)
+    {
+        $request = new Request("DELETE", $this->buildUrl(sprintf("/jobs/%s", $uuid)));
+        $response = $this->send($request);
+
+        if ($response->getStatusCode() !== 204) {
+            throw new ClientException(sprintf("Unexpected response: %d %s", $response->getStatusCode(), $response->getReasonPhrase()), $request, $response);
+        }
     }
 
 }

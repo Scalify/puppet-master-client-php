@@ -1,7 +1,7 @@
 {
     "name": "scalify/puppet-master-client",
     "description": "Client library for the puppet-master HTTP API",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "homepage": "https://docs.puppet-master.io",
     "authors": [
         {

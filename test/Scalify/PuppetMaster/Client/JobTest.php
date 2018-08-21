@@ -21,35 +21,35 @@ class JobTest extends BaseTestCase
 
     public function testConstructAndFillSetsFields()
     {
-        $this->assertEquals($this->job->getUuid(), $this->response["uuid"], "uuid is not equal");
-        $this->assertEquals($this->job->getStatus(), $this->response["status"], "status is not equal");
-        $this->assertEquals($this->job->getCode(), $this->response["code"], "code is not equal");
-        $this->assertEquals($this->job->getVars(), $this->response["vars"], "vars is not equal");
-        $this->assertEquals($this->job->getModules(), $this->response["modules"], "modules is not equal");
-        $this->assertEquals($this->job->getError(), $this->response["error"], "error is not equal");
-        $this->assertEquals($this->job->getLogs(), $this->response["logs"], "logs is not equal");
-        $this->assertEquals($this->job->getResults(), $this->response["results"], "results is not equal");
-        $this->assertEquals($this->job->getDuration(), $this->response["duration"], "duration is not equal");
-        $this->assertDateEquals($this->job->getCreatedAt()->format(DateTime::RFC3339), $this->response["created_at"], "created_at is not equal");
-        $this->assertDateEquals($this->job->getStartedAt()->format(DateTime::RFC3339), $this->response["started_at"], "started_at is not equal");
-        $this->assertDateEquals($this->job->getFinishedAt()->format(DateTime::RFC3339), $this->response["finished_at"], "finished_at is not equal");
+        $this->assertEquals($this->response["uuid"], $this->job->getUuid(), "uuid is not equal");
+        $this->assertEquals($this->response["status"], $this->job->getStatus(), "status is not equal");
+        $this->assertEquals($this->response["code"], $this->job->getCode(), "code is not equal");
+        $this->assertEquals($this->response["vars"], $this->job->getVars(), "vars is not equal");
+        $this->assertEquals($this->response["modules"], $this->job->getModules(), "modules is not equal");
+        $this->assertEquals($this->response["error"], $this->job->getError(), "error is not equal");
+        $this->assertEquals($this->response["logs"], $this->job->getLogs(), "logs is not equal");
+        $this->assertEquals($this->response["results"], $this->job->getResults(), "results is not equal");
+        $this->assertEquals($this->response["duration"], $this->job->getDuration(), "duration is not equal");
+        $this->assertDateEquals($this->response["created_at"], $this->job->getCreatedAt()->format(DateTime::RFC3339), "created_at is not equal");
+        $this->assertDateEquals($this->response["started_at"], $this->job->getStartedAt()->format(DateTime::RFC3339), "started_at is not equal");
+        $this->assertDateEquals($this->response["finished_at"], $this->job->getFinishedAt()->format(DateTime::RFC3339), "finished_at is not equal");
     }
 
     public function testToArray()
     {
         $data = $this->job->toArray();
 
-        $this->assertEquals($data["uuid"], $this->response["uuid"], "uuid is not equal");
-        $this->assertEquals($data["status"], $this->response["status"], "status is not equal");
-        $this->assertEquals($data["code"], $this->response["code"], "code is not equal");
-        $this->assertEquals($data["vars"], $this->response["vars"], "vars is not equal");
-        $this->assertEquals($data["modules"], $this->response["modules"], "modules is not equal");
-        $this->assertEquals($data["error"], $this->response["error"], "error is not equal");
-        $this->assertEquals($data["logs"], $this->response["logs"], "logs is not equal");
-        $this->assertEquals($data["results"], $this->response["results"], "results is not equal");
-        $this->assertEquals($data["duration"], $this->response["duration"], "duration is not equal");
-        $this->assertDateEquals($data["created_at"], $this->response["created_at"], "created_at is not equal");
-        $this->assertDateEquals($data["started_at"], $this->response["started_at"], "started_at is not equal");
-        $this->assertDateEquals($data["finished_at"], $this->response["finished_at"], "finished_at is not equal");
+        $this->assertEquals($this->response["uuid"], $data["uuid"], "uuid is not equal");
+        $this->assertEquals($this->response["status"], $data["status"], "status is not equal");
+        $this->assertEquals($this->response["code"], $data["code"], "code is not equal");
+        $this->assertEquals($this->response["vars"], $data["vars"], "vars is not equal");
+        $this->assertEquals($this->response["modules"], $data["modules"], "modules is not equal");
+        $this->assertEquals($this->response["error"], $data["error"], "error is not equal");
+        $this->assertEquals($this->response["logs"], $data["logs"], "logs is not equal");
+        $this->assertEquals($this->response["results"], $data["results"], "results is not equal");
+        $this->assertEquals($this->response["duration"], $data["duration"], "duration is not equal");
+        $this->assertDateEquals($this->response["created_at"], $data["created_at"], "created_at is not equal");
+        $this->assertDateEquals($this->response["started_at"], $data["started_at"], "started_at is not equal");
+        $this->assertDateEquals($this->response["finished_at"], $data["finished_at"], "finished_at is not equal");
     }
 }

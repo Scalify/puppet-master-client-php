@@ -2,18 +2,19 @@
 
 namespace Scalify\PuppetMaster\Client;
 
-use JsonSerializable;
-
-class CreateJob implements JsonSerializable
+class CreateJob
 {
     /** @var string */
-    protected $code;
+    private $code;
 
     /** @var array */
-    protected $modules;
+    private $modules;
 
     /** @var array */
-    protected $vars;
+    private $vars;
+
+    /** @var string */
+    private $uuid;
 
     /**
      * CreateJob constructor.
@@ -21,12 +22,14 @@ class CreateJob implements JsonSerializable
      * @param string $code
      * @param array  $vars
      * @param array  $modules
+     * @param string $uuid
      */
-    public function __construct(string $code, array $vars = [], array $modules = [])
+    public function __construct(string $code, array $vars = [], array $modules = [], string $uuid = "")
     {
         $this->setCode($code);
         $this->setVars($vars);
         $this->setModules($modules);
+        $this->setUUID($uuid);
     }
 
     /**
@@ -54,16 +57,6 @@ class CreateJob implements JsonSerializable
     }
 
     /**
-     * @param string $key
-     *
-     * @return bool
-     */
-    public function hasModule(string $key): bool
-    {
-        return array_key_exists($key, $this->modules);
-    }
-
-    /**
      * @param array $modules
      */
     public function setModules(array $modules)
@@ -72,6 +65,16 @@ class CreateJob implements JsonSerializable
         foreach ($modules as $key => $value) {
             $this->addModule($key, $value);
         }
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return bool
+     */
+    public function hasModule(string $key): bool
+    {
+        return array_key_exists($key, $this->modules);
     }
 
     /**
@@ -104,16 +107,6 @@ class CreateJob implements JsonSerializable
     }
 
     /**
-     * @param string $key
-     *
-     * @return bool
-     */
-    public function hasVar(string $key): bool
-    {
-        return array_key_exists($key, $this->vars);
-    }
-
-    /**
      * @param array $vars
      */
     public function setVars(array $vars)
@@ -122,6 +115,16 @@ class CreateJob implements JsonSerializable
         foreach ($vars as $key => $value) {
             $this->addVar($key, $value);
         }
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return bool
+     */
+    public function hasVar(string $key): bool
+    {
+        return array_key_exists($key, $this->vars);
     }
 
     /**
@@ -146,6 +149,22 @@ class CreateJob implements JsonSerializable
     }
 
     /**
+     * @return string
+     */
+    public function getUUID(): string
+    {
+        return $this->uuid;
+    }
+
+    /**
+     * @param string $uuid
+     */
+    public function setUUID(string $uuid)
+    {
+        $this->uuid = $uuid;
+    }
+
+    /**
      * Returns an associative array representation of the createJob, ready for transport or serialization.
      *
      * @return array
@@ -153,6 +172,7 @@ class CreateJob implements JsonSerializable
     public function toArray()
     {
         $data = [
+            "uuid" => $this->uuid,
             "code" => $this->code,
             "modules" => $this->modules,
             "vars" => $this->vars,
@@ -170,13 +190,4 @@ class CreateJob implements JsonSerializable
 
         return $data;
     }
-
-    /**
-     * @inheritDoc
-     */
-    public function jsonSerialize()
-    {
-        return $this->toArray();
-    }
-
 }
