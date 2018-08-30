@@ -158,7 +158,7 @@ class Client implements ClientInterface
     /**
      * @inheritdoc
      */
-    public function executeSynchronously(CreateJob $createJob): JOb
+    public function executeSynchronously(CreateJob $createJob): Job
     {
         $job = $this->createJob($createJob);
 
