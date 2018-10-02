@@ -149,7 +149,7 @@ class ClientTest extends BaseTestCase
     public function testCreateJob()
     {
         $this->createMockedClient([
-            new Response(200, [], $this->getFileContent("create-response")),
+            new Response(201, [], $this->getFileContent("create-response")),
         ]);
 
         $requestData = $this->getJSONContent("create-request");
@@ -183,7 +183,7 @@ class ClientTest extends BaseTestCase
     public function testExecuteSynchronously()
     {
         $this->createMockedClient([
-            new Response(200, [], $this->getFileContent("create-response")),
+            new Response(201, [], $this->getFileContent("create-response")),
             new Response(200, [], $this->getFileContent("create-response")),
             new Response(200, [], $this->getFileContent("create-response")),
             new Response(200, [], $this->getFileContent("get-job-response")),
