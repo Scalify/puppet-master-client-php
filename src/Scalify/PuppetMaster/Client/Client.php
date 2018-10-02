@@ -146,7 +146,7 @@ class Client implements ClientInterface
         $request = new Request("POST", $this->buildUrl("/jobs"), [], json_encode($createJob->toArray()));
         $response = $this->send($request);
 
-        if ($response->getStatusCode() !== 200) {
+        if ($response->getStatusCode() !== 201) {
             throw new ClientException(sprintf("Unexpected response: %d %s", $response->getStatusCode(), $response->getReasonPhrase()), $request, $response);
         }
 
